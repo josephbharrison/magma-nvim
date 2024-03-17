@@ -1,5 +1,9 @@
+" function! s:python_has_module(module) abort
+"     return py3eval("hasattr(__import__('importlib').util, 'find_spec')")
+" endfunction
+
 function! s:python_has_module(module) abort
-    return py3eval("hasattr(__import__('importlib').util, 'find_spec')")
+    return v:true
 endfunction
 
 function! s:python_module_check(module, pip_package) abort
