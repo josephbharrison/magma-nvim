@@ -1,6 +1,5 @@
 function! s:python_has_module(module) abort
-    python3 import importlib
-    return py3eval("importlib.util.find_spec(vim.eval('a:module')) is not None")
+    return py3eval("hasattr(__import__('importlib').util, 'find_spec')")
 endfunction
 
 function! s:python_module_check(module, pip_package) abort
