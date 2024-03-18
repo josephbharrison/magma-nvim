@@ -8,6 +8,9 @@ from pynvim import Nvim
 from magma.utils import MagmaException
 
 
+import subprocess
+
+
 class Canvas(ABC):
     @abstractmethod
     def init(self) -> None:
@@ -74,6 +77,49 @@ class Canvas(ABC):
           The desired height for the image, in terminal rows.
         """
 
+class ChafaCanvas(Canvas):
+    def __init__(self, nvim: Nvim) -> None:
+        self.nvim = nvim
+
+    def init(self) -> None:
+        pass  # Initialization logic, if needed
+
+    def deinit(self) -> None:
+        pass  # Cleanup logic, if needed
+
+    def present(self) -> None:
+        # Implementation might be no-op if images are directly drawn in add_image
+        pass
+
+    def clear(self) -> None:
+        # Clearing the terminal or specific drawing area if possible
+        pass
+
+    def add_image(
+        self,
+        path: str,
+        identifier: str,
+        x: int,
+        y: int,
+        width: int,
+        height: int,
+    ) -> None:
+        # Use Chafa to convert the image to ANSI and display it in the terminal
+        try:
+            result = subprocess.run(
+                ["chafa", "--size", f"{width}x{height}", path],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            image_as_ansi = result.stdout
+            # Display the ANSI image at the specified position
+            # This might require manipulating the cursor position
+            # and ensuring the output doesn't disrupt the user's layout
+            self.nvim.command(f"echo '{image_as_ansi}'")
+        except subprocess.CalledProcessError as e:
+            # Handle errors, possibly logging or displaying an error message
+            pass
 
 class NoCanvas(Canvas):
     def __init__(self) -> None:
@@ -365,5 +411,7 @@ def get_canvas_given_provider(name: str, nvim: Nvim) -> Canvas:
         return UeberzugCanvas()
     elif name == "kitty":
         return Kitty(nvim)
+    elif name == "chafa":
+        return ChafaCanvas(nvim)
     else:
         raise MagmaException(f"Unknown image provider: '{name}'")
