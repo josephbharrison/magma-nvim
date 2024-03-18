@@ -173,8 +173,8 @@ class ImageOutputChunk(OutputChunk):
         canvas.add_image(
             self.img_path,
             self.img_checksum,
-            x=x,
-            y=y + lineno + 1,  # TODO: consider scroll in the display window
+            x=x*2,
+            y=(y + lineno + 1)*2,  # TODO: consider scroll in the display window
             width=w,
             height=nlines,
         )
