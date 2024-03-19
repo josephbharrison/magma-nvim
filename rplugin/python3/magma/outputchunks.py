@@ -175,8 +175,8 @@ class ImageOutputChunk(OutputChunk):
             self.img_checksum,
             x=x,
             y=y + lineno + 1,  # TODO: consider scroll in the display window
-            width=(w*2),
-            height=(nlines*2),
+            width=w,
+            height=nlines,
         )
         return "\n" * nlines
 
